@@ -1,30 +1,9 @@
-# from fastapi import FastAPI
-# from typing import Optional
-# from schemas import Staff
-
-# app = FastAPI()
-
-# @app.get('/')
-# def get_staff(lim: int = 10, sort: Optional[str] = None):
-#     return {
-#         "message": [1,3,5,lim]
-#     }
-
-# @app.get('/{id}')
-# def get_staff_by_id(id: int):
-#     return {'data': id}
-
-
-# @app.post('/')
-# def create_staff(request: Staff):
-#     return Staff
-
-
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
+# from . import crud, models, schemas
 from . import crud, models, schemas
-from .database import SessionLocal, engine
+from database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -73,3 +52,25 @@ def read_staff(staff_id: int, db: Session = Depends(get_db)):
 def read_channel(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     channels = crud.get_channels(db, skip=skip, limit=limit)
     return channels
+
+
+# from fastapi import FastAPI
+# from typing import Optional
+# from schemas import Staff
+
+# app = FastAPI()
+
+# @app.get('/')
+# def get_staff(lim: int = 10, sort: Optional[str] = None):
+#     return {
+#         "message": [1,3,5,lim]
+#     }
+
+# @app.get('/{id}')
+# def get_staff_by_id(id: int):
+#     return {'data': id}
+
+
+# @app.post('/')
+# def create_staff(request: Staff):
+#     return Staff
