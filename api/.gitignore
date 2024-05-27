@@ -1,4 +1,12 @@
 __pycache__/
+include/
+lib/
+lib64/
+
+*.pyc
+*.pyo
+*.log
+pyvenv.cfg
 
 # Ignore Python virtual environment files
 venv/
@@ -8,3 +16,4 @@ env/
 # Ignore editor-specific files
 .vscode/
 .idea/
+sql_app.db

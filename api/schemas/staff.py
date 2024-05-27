@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr
-from enums import Role, Department
+from .enums import Role
 from datetime import datetime
 from typing import Optional, List
+from .channel import Channel
 
 
 class StaffBase(BaseModel):
@@ -20,27 +21,6 @@ class Staff(StaffBase):
     created_at: datetime
     updated_at: datetime
     channels: List['Channel']
-
-    class Config:
-        from_attributes = True
-
-
-class ChannelBase(BaseModel):
-    name: str
-    description: str | None = None
-    department: Department
-    created_by: int
-
-
-class ChannelCreate(ChannelBase):
-    pass
-
-
-class Channel(ChannelBase):
-    id: int
-    created_at: datetime
-    updated_at: datetime
-    # staff_created: Staff
 
     class Config:
         from_attributes = True
