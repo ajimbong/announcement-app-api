@@ -14,12 +14,14 @@ class ChannelCreate(ChannelBase):
     pass
 
 
+class ChannelUpdate(ChannelBase):
+    pass
+
+
 class Channel(ChannelBase):
     id: int
     created_at: datetime
     updated_at: datetime
-
-    # staff_created: Staff
 
     class Config:
         from_attributes = True

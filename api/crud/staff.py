@@ -16,6 +16,11 @@ def get_staffs(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Staff).offset(skip).limit(limit).all()
 
 
+# FIXME: We don't want staff members to update
+# their roles by themselves. Only Staff accounts
+# with Administrative rights should be able to
+# do so
+# FIXME: Also update fake hashed passwords
 def create_staff(db: Session, staff: StaffCreate):
     fake_hashed_password = staff.password + "notreallyhashed"
     db_staff = models.Staff(email=staff.email, name=staff.name, password=fake_hashed_password, created_by=staff.created_by, role=staff.role.value)

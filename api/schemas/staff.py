@@ -1,8 +1,8 @@
 from pydantic import BaseModel, EmailStr
+
 from .enums import Role
 from datetime import datetime
 from typing import Optional, List
-from .channel import Channel
 
 
 class StaffBase(BaseModel):
@@ -16,11 +16,14 @@ class StaffCreate(StaffBase):
     password: str
 
 
+class StaffUpdate(StaffBase):
+    password: str
+
+
 class Staff(StaffBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    channels: List['Channel']
 
     class Config:
         from_attributes = True
