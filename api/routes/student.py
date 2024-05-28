@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 import api.crud.student as crud
@@ -78,3 +79,4 @@ def delete_student(student_id: int, db: Session = Depends(get_db)):
                             detail=f"No student with ID {student_id}")
 
     crud.delete_student(db, student_id)
+    return JSONResponse(content={"detail": "Student deleted"})
