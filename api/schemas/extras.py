@@ -1,3 +1,4 @@
+from api.schemas.announcement import Announcement
 from api.schemas.channel import Channel
 from api.schemas.staff import Staff
 from api.schemas.student import Student
@@ -19,3 +20,8 @@ class SubscriptionExtra(Subscription):
 
 class StudentExtra(Student):
     subscriptions: list[Subscription]
+
+
+class AnnouncementExtra(Announcement):
+    channel: Channel
+    staff: Staff
