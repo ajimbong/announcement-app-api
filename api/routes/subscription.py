@@ -21,6 +21,12 @@ router = APIRouter(
 @router.get("/", response_model=list[SubscriptionExtra], status_code=status.HTTP_200_OK)
 def get_subscriptions(channel_id: Optional[int] = None, student_id: Optional[int] = None,
                       skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    - Can get subscriptions filtered by channel_id and student_id.
+    - Can get subscriptions filtered by channel_id only.
+    - Can get subscriptions filtered by student_id only.
+    - Can get subscriptions with no filter
+    """
     if channel_id is not None and student_id is not None:
         return crud.get_sub_by_channel_and_student(db,channel_id, student_id)
     elif channel_id:

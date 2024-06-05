@@ -1,6 +1,19 @@
 from enum import Enum
 
 
+class AccessLevel(Enum):
+    READ = "read"
+    WRITE = "write"
+
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.lower()
+        for member in cls:
+            if member.value == value:
+                return member
+        return None
+
+
 class Role(Enum):
     LECTURER = 'lecturer'
     HOD = 'hod'

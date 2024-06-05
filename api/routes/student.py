@@ -24,7 +24,7 @@ def get_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 def get_single_student(student_id: int, db: Session = Depends(get_db)):
     db_student = crud.get_student(db, student_id)
     if db_student is None:
-        raise HTTPException(status_code=status.HTTP_404_BAD_REQUEST,
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Student with id {student_id} could not be found")
     return db_student
 

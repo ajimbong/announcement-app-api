@@ -3,6 +3,7 @@ from api.schemas.channel import Channel
 from api.schemas.staff import Staff
 from api.schemas.student import Student
 from api.schemas.subscription import Subscription
+from api.schemas.permission import Permission
 
 
 class StaffExtra(Staff):
@@ -23,5 +24,10 @@ class StudentExtra(Student):
 
 
 class AnnouncementExtra(Announcement):
+    channel: Channel
+    staff: Staff
+
+
+class PermissionExtra(Permission):
     channel: Channel
     staff: Staff

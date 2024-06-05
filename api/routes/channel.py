@@ -44,7 +44,7 @@ def create_channel(channel: channel_schema.ChannelCreate, db: Session = Depends(
     return crud.create_channel(db, channel, staff_id)
 
 
-@router.patch("/{channel_id}", response_model=channel_schema.Channel, status_code=status.HTTP_200_OK)
+@router.put("/{channel_id}", response_model=channel_schema.Channel, status_code=status.HTTP_200_OK)
 def update_channel(channel_id: int, channel: channel_schema.ChannelUpdate, db: Session = Depends(get_db)):
     """
     - Verify if channel exists

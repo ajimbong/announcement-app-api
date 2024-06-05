@@ -35,7 +35,7 @@ def create_announcement(db: Session, announcement: AnnouncementCreate):
 
 
 def update_announcement(db: Session, announcement: AnnouncementUpdate, announcement_id: int):
-    db_announcement: Announcement = db.query(AnnouncementCreate).filter(Announcement.id == announcement_id).first()
+    db_announcement: Announcement = db.query(Announcement).filter(Announcement.id == announcement_id).first()
 
     db_announcement.message = announcement.message
     db_announcement.channel_id = announcement.channel_id
@@ -44,3 +44,10 @@ def update_announcement(db: Session, announcement: AnnouncementUpdate, announcem
     db.commit()
     db.refresh(db_announcement)
     return db_announcement
+
+
+def delete_announcement(db: Session, ann_id: int):
+    db_announcement: Announcement = db.query(Announcement).filter(Announcement.id == ann_id).first()
+
+    db.delete(db_announcement)
+    db.commit()
