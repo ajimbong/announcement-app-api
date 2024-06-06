@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from api.db.models import Student
 from api.schemas.student import StudentCreate, StudentUpdate
+from api.utils.hashing import get_password_hash
 
 
 def get_student(db: Session, student_id: int):
@@ -21,14 +22,13 @@ def get_students(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Student).offset(skip).limit(limit).all()
 
 
-# FIXME: Update the fake hashed passwords
 def create_student(db: Session, student: StudentCreate):
-    fake_hashed_password = student.password + "notreallyhashed"
+    hashed_password = get_password_hash(student.password)
     db_student: Student = Student(
         name=student.name,
         email=student.email,
         matricule=student.matricule,
-        password=fake_hashed_password,
+        password=hashed_password,
     )
     db.add(db_student)
     db.commit()
@@ -37,12 +37,14 @@ def create_student(db: Session, student: StudentCreate):
 
 
 def update_student(db: Session, student: StudentUpdate, student_id: int):
+    """
+    For the update operation, we won't be able to update the password
+    """
     db_student: Student = db.query(Student).filter(Student.id==student_id).first()
 
     db_student.name = student.name
     db_student.email = student.email
     db_student.matricule = student.matricule
-    db_student.password = student.password + "fake hash"
     db.commit()
     db.refresh(db_student)
     return db_student

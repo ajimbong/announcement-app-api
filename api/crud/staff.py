@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 
 from api.schemas.staff import StaffCreate
 from api.db import models
+from api.utils.hashing import get_password_hash
 
 
 def get_staff(db: Session, staff_id: int):
@@ -20,10 +21,9 @@ def get_staffs(db: Session, skip: int = 0, limit: int = 100):
 # their roles by themselves. Only Staff accounts
 # with Administrative rights should be able to
 # do so
-# FIXME: Also update fake hashed passwords
 def create_staff(db: Session, staff: StaffCreate):
-    fake_hashed_password = staff.password + "notreallyhashed"
-    db_staff = models.Staff(email=staff.email, name=staff.name, password=fake_hashed_password, created_by=staff.created_by, role=staff.role.value)
+    hashed_password = get_password_hash(staff.password)
+    db_staff = models.Staff(email=staff.email, name=staff.name, password=hashed_password, created_by=staff.created_by, role=staff.role.value)
     db.add(db_staff)
     db.commit()
     db.refresh(db_staff)

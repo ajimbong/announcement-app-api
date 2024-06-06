@@ -1,6 +1,8 @@
+import string
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ValidationError, field_validator, Field
+from pydantic_core.core_schema import FieldValidationInfo
 
 
 # TODO: Add Regex Validation for matricule
@@ -11,11 +13,32 @@ class StudentBase(BaseModel):
 
 
 class StudentCreate(StudentBase):
-    password: str
+    password: str = Field(examples=["Password123#"])
+    confirm_password: str = Field(examples=["Password123#"])
+
+    # Verify if password is strong
+    @field_validator('password')
+    def password_valid(cls, v):
+        if len(v) < 8:
+            raise ValueError("Password must have at least 8 characters")
+
+        if not any(c.isupper() for c in v) or \
+                not any(c.islower() for c in v) or \
+                not any(c.isdigit() for c in v) or \
+                not any(c in string.punctuation for c in v):
+            raise ValueError("Password must include a digit, lowercase, uppercase and special character")
+        return v
+
+    # Verifies if passwords match
+    @field_validator('confirm_password')
+    def passwords_match(cls, v, info: FieldValidationInfo):
+        if 'password' in info.data and v != info.data['password']:
+            raise ValueError('passwords do not match')
+        return v
 
 
 class StudentUpdate(StudentBase):
-    password: str
+    pass
 
 
 class Student(StudentBase):

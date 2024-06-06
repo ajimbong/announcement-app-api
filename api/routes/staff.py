@@ -28,7 +28,7 @@ def read_staff(staff_id: int, db: Session = Depends(get_db)):
     return db_staff
 
 
-@router.post("/", response_model=staff_schema.Staff)
+@router.post("/", response_model=staff_schema.Staff, status_code=status.HTTP_201_CREATED)
 def create_staff(staff: staff_schema.StaffCreate, db: Session = Depends(get_db)):
     db_staff = crud.get_staff_by_email(db, email=staff.email)
     if db_staff:
