@@ -8,3 +8,5 @@ env/
 # Ignore editor-specific files
 .vscode/
 .idea/
+
+sql_app.db

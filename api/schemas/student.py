@@ -1,3 +1,4 @@
+import re
 import string
 from datetime import datetime
 
@@ -9,7 +10,14 @@ from pydantic_core.core_schema import FieldValidationInfo
 class StudentBase(BaseModel):
     name: str
     email: EmailStr
-    matricule: str
+    matricule: str = Field(examples=["ET20200721"])
+
+    @field_validator('matricule')
+    def matricule_valid(cls, v):
+        pattern = r'^[a-zA-Z]{2,3}\d{8}$'
+        if re.match(pattern, v) is False:
+            raise ValueError("Matricule must be of the form ET20200721")
+        return v
 
 
 class StudentCreate(StudentBase):
