@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .db import models
 from .db.database import engine
-from .routes import staff, channel, student, subscription, announcement, permission
+from .routes import staff, channel, student, subscription, announcement, permission, authentication
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -29,6 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(authentication.router)
 app.include_router(student.router)
 app.include_router(staff.router)
 app.include_router(channel.router)

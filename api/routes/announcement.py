@@ -7,7 +7,7 @@ from api.crud.channel import get_channel
 from api.crud.staff import get_staff
 import api.schemas.announcement as ann_schema
 from api.schemas.extras import AnnouncementExtra
-from api.dependencies import get_db
+from api.utils.dependencies import get_db
 
 router = APIRouter(
     prefix="/announcements",

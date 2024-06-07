@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 import api.crud.subscription as crud
 import api.schemas.subscription as sub_schema
 from api.schemas.extras import SubscriptionExtra
-from api.dependencies import get_db
+from api.schemas.token import StudentJWT
+from api.utils.dependencies import get_db, get_current_student
 from api.crud.student import get_student
 from api.crud.channel import get_channel
 
@@ -38,15 +39,20 @@ def get_subscriptions(channel_id: Optional[int] = None, student_id: Optional[int
 
 
 @router.post("/", response_model=sub_schema.Subscription, status_code=status.HTTP_201_CREATED)
-def create_new_subscription(subscription: sub_schema.SubscriptionCreate, db: Session = Depends(get_db)):
+def create_new_subscription(subscription: sub_schema.SubscriptionCreate, current_student: Annotated[StudentJWT, Depends(get_current_student)], db: Session = Depends(get_db)):
     """
     # Logic
+    - If user subscribing has the permissions to
     - It checks if Subscription already exists
     - Verifies if Channel ID is valid
     - Also verified if Student ID is correct
     """
 
     db_subscription = crud.get_sub_by_channel_and_student(db, subscription.channel_id, subscription.student_id)
+
+    if subscription.student_id != current_student.student_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Permission denied")
+
     if db_subscription is not None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Already subscribed")
 
@@ -62,13 +68,17 @@ def create_new_subscription(subscription: sub_schema.SubscriptionCreate, db: Ses
 
 
 @router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
-def unsubscribe(channel_id: int, student_id: int, db: Session = Depends(get_db)):
+def unsubscribe(channel_id: int, student_id: int, current_student: Annotated[StudentJWT, Depends(get_current_student)], db: Session = Depends(get_db)):
     """
-    - First verifies if channel exists already
+    - Checks if the user unsubscribing has the permissions to
+    - Verifies if channel exists already
     """
+    if student_id != current_student.student_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Permission denied")
+
     db_subscription = crud.get_sub_by_channel_and_student(db, channel_id, student_id)
     if db_subscription is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No such entry found in database")
 
-    crud.unsubscribe(db,channel_id, student_id)
+    crud.unsubscribe(db, channel_id, student_id)
     return JSONResponse(content={"detail": "Unsubscribed"})

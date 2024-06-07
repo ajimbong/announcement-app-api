@@ -8,7 +8,7 @@ import api.crud.permission as crud
 from api.crud.channel import get_channel
 from api.crud.staff import get_staff
 import api.schemas.permission as schema
-from api.dependencies import get_db
+from api.utils.dependencies import get_db
 
 router = APIRouter(
     prefix="/permissions",

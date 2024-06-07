@@ -5,7 +5,7 @@ import api.crud.staff as crud
 from api.crud.channel import create_channel
 import api.schemas.staff as staff_schema
 import api.schemas.channel as chanel_schema
-from api.dependencies import get_db
+from api.utils.dependencies import get_db
 
 router = APIRouter(
     prefix="/staffs",

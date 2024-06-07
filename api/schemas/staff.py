@@ -11,7 +11,7 @@ from typing import Optional, List
 class StaffBase(BaseModel):
     name: str
     email: EmailStr
-    role: Optional[Role] = None
+    role: Role = Role.OTHER
     created_by: Optional[int] = None
 
 
